@@ -1,0 +1,160 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+<title>plasma test in GLSL and three.js</title>
+</head>
+<body>
+
+<h1>plasma by GLSL</h1>
+<canvas id="canvas"></canvas><br>
+<input id=rspeed type="range" min=0 max=0.01 step=0.0001 value=0.005><br>
+<input id=rsize type="range" min=0 max=0.1 step=0.001 value=0.02><br>
+<input id=rradius type="range" min=0 max=1.0 step=0.001 value=0.5><br>
+<input id=rredShift type="range" min=0 max=1 step=0.01 value=0.2><br>
+<input id=rgreenShift type="range" min=0 max=1 step=0.01 value=0.8><br>
+<input id=rblueShift type="range" min=0 max=1 step=0.01 value=0.5><br>
+<button id=btnrnd>randam</button><br>
+
+<br>
+<a href=https://github.com/code4fukui/glsl-plasma>src on GitHub</a><br>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+body {
+	text-align: center;
+	background-color: black;
+	color: white;
+	font-family: sans-serif;
+}
+a {
+	color: white !important;
+}
+canvas {
+	width: 512px;
+	height: 512px;
+}
+input[type=range] {
+	width: 512px;
+	-webkit-appearance: none;
+	background-color: #333;
+}
+</style>
+
+<script type="module">
+import * as THREE from "https://code4fukui.github.io/three.js/build/three.module.js";
+
+const W = 512;
+//const aspect = window.innerWidth / window.innerHeight;
+const aspect = screen.width / screen.height;
+canvas.width = aspect * W;
+canvas.height = W;
+canvas.style.width = canvas.width + "px";
+canvas.style.height = canvas.height + "px";
+const render = new THREE.WebGLRenderer({ canvas });
+const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -1, 1); // left, right, top, bottom, near, far
+const scene = new THREE.Scene();
+const geometry = new THREE.PlaneGeometry(2 * aspect, 2); // w, h
+const material = new THREE.ShaderMaterial({
+	uniforms: {
+		width: { type: "1f", value: W * aspect },
+		height: { type: "1f", value: W },
+		time: { type: "1f", value: 0.0 },
+		radius: { type: "1f", value: 1.0 },
+		alpha: { type: "1f", value: 1.0 },
+		size: { type: "1f", value: 0.03 },
+		redShift: { type: "1f", value: 0.5 },
+		greenShift: { type: "1f", value: 0.5 },
+		blueShift: { type: "1f", value: 0.9 },
+	},
+	fragmentShader: `
+		// Based on https://douglastarr.com/keyboard-boogie https://github.com/tarr11/tarr11.github.com/blob/master/games/keyboardboogie/plasma.js
+		precision mediump float;
+		uniform float     width;
+		uniform float     height;
+		uniform float     time;
+		uniform float     radius;
+		uniform float     alpha;
+		uniform float     size;
+		uniform float     redShift;
+		uniform float     greenShift;
+		uniform float     blueShift;
+
+		const float PI = 3.14159265;
+
+		void main(void) {
+			float color1 = (sin(dot(gl_FragCoord.xy, vec2(sin(time * 3.0), cos(time * 3.0))) * 0.02 + time * 3.0) + 1.0) / 2.0;
+			vec2 center = vec2(width / 2.0, height / 2.0) + vec2(width / 2.0 * sin(-time * 3.0) * radius, height / 2.0 * cos(-time * 3.0) * radius);
+			float color2 = (cos(length(gl_FragCoord.xy - center) * size) + 1.0) / 2.0;
+			float color = (color1 + color2) / 2.0;
+
+			float red = (sin(PI * color / redShift + time * 3.0) + 1.0) / 2.0;
+			float green = (sin(PI * color / greenShift + time * 3.0) + 1.0) / 2.0;
+			float blue = (sin(PI * color / blueShift + time * 3.0) + 1.0) / 2.0;
+
+			gl_FragColor = vec4(red, green, blue, alpha);
+		}
+	`,
+});
+const plane = new THREE.Mesh(geometry, material);
+scene.add(plane);
+
+let time = 0;
+const tick = () => {
+	time += parseFloat(rspeed.value);
+	plane.material.uniforms.time.value = time;
+	render.render(scene, camera);
+	requestAnimationFrame(tick);
+};
+tick();
+
+// vars
+const vars = ["size", "radius", "redShift", "greenShift", "blueShift"];
+const setHash = () => location.hash = "#" + vars.map(v => document.getElementById("r" + v).value).join(",");
+const hash = location.hash.substring(1).split(",");
+if (hash.length > 0) {
+	for (let i = 0; i < hash.length; i++) {
+		const c = document.getElementById("r" + vars[i]);
+		c.value = hash[i];
+	};
+}
+
+for (const v of vars) {
+	const c = document.getElementById("r" + v);
+	c.oninput = () => {
+		plane.material.uniforms[v].value = c.value;
+		setHash();
+	};
+	c.oninput();
+}
+
+btnrnd.onclick = () => {
+	for (const v of vars) {
+		const c = document.getElementById("r" + v);
+		c.value = c.min + Math.random() * (c.max - c.min);
+		c.oninput();
+	}
+};
+
+canvas.onclick = () => {
+	canvas.requestFullscreen();
+	/*
+	window.onresize = () => {
+		//const aspect = canvas.offsetWidth / canvas.offsetHeight;
+		const aspect = innerWidth / innerHeight;
+		console.log(innerWidth, innerHeight)
+		canvas.width = innerWidth * 2; //aspect * W;
+		canvas.height = innerHeight * 2; // W;
+		//canvas.style.width = canvas.width + "px";
+		//canvas.style.height = canvas.height + "px";
+		canvas.style.width = "100vw";
+		canvas.style.height = "100vh";
+		plane.material.uniforms.width.value = canvas.width;
+		plane.material.uniforms.height.value = canvas.height;
+	};
+	*/
+};
+</script>
+
+</body>
+
+</html>
