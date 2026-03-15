@@ -1,8 +1,23 @@
 # glsl-plasma
 
-- [demo](https://code4fukui.github.io/glsl-plasma/)
+A WebGL-based plasma effect created using GLSL shaders and Three.js.
 
-## Based on
+## Demo
+[https://code4fukui.github.io/glsl-plasma/](https://code4fukui.github.io/glsl-plasma/)
 
-- [plasma.js](https://github.com/tarr11/tarr11.github.com/blob/master/games/keyboardboogie/plasma.js) from [Keyboard Boogie - Doug Tarr's Blog](https://douglastarr.com/keyboard-boogie)
-- [folded 6 - MONKEY CIRCUS おさるサーカス](http://mameson.com/experiment/glsl/folded_6/folded_6.html)
+## Features
+- Animated plasma effect with customizable parameters
+- Ability to adjust size, radius, color shifts, and more
+- Fullscreen mode
+
+## Usage
+1. Clone the repository:
+   ```
+   git clone https://github.com/code4fukui/glsl-plasma.git
+   ```
+2. Open the `index.html` file in a web browser.
+3. Use the on-screen sliders to adjust the plasma effect parameters.
+4. Click the canvas to enter fullscreen mode.
+
+## License
+This project is licensed under the MIT License.
