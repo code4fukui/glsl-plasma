@@ -1,5 +1,7 @@
 # glsl-plasma
 
+> 日本語のREADMEはこちらです: [README.ja.md](README.ja.md)
+
 A WebGL-based plasma effect created using GLSL shaders and Three.js.
 
 ## Demo

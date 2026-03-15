@@ -1,9 +1,9 @@
 # glsl-plasma
 
-Three.jsとGLSLによるプラズマ効果のデモです。
+Three.jsとGLSLを使って作成されたプラズマ効果のデモです。
 
 ## デモ
-[デモページ](https://code4fukui.github.io/glsl-plasma/)
+[https://code4fukui.github.io/glsl-plasma/](https://code4fukui.github.io/glsl-plasma/)
 
 ## 機能
 - 時間とともにプラズマ効果が変化します
@@ -11,7 +11,7 @@ Three.jsとGLSLによるプラズマ効果のデモです。
 - ランダムボタンで自動的にパラメータがランダム化されます
 
 ## 必要環境
-- Web ブラウザ
+- Webブラウザ
 
 ## 使い方
 ブラウザでデモページを開いてください。スライダーを動かしてプラズマ効果を変更できます。ランダムボタンを押すと自動的にパラメータがランダム化されます。
