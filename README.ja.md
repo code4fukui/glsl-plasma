@@ -3,7 +3,7 @@
 Three.jsとGLSLを使って作成されたプラズマ効果のデモです。
 
 ## デモ
-[https://code4fukui.github.io/glsl-plasma/](https://code4fukui.github.io/glsl-plasma/)
+https://code4fukui.github.io/glsl-plasma/
 
 ## 機能
 - 時間とともにプラズマ効果が変化します

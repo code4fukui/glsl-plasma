@@ -22,4 +22,4 @@ A WebGL-based plasma effect created using GLSL shaders and Three.js.
 4. Click the canvas to enter fullscreen mode.
 
 ## License
-This project is licensed under the MIT License.
+MIT License — see [LICENSE](LICENSE).
